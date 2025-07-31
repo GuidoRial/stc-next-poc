@@ -1,103 +1,112 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen surface-50">
+      <div className="flex flex-column align-items-center p-4 md:p-8">
+        <div className="max-w-4xl w-full">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <h1 className="text-5xl font-bold text-900 mb-4">
+              STC Frontend Next.js Demo
+            </h1>
+            <p className="text-xl text-600 mb-4">
+              Demonstrating Server-Side Rendering with Jotai state management
+            </p>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* Feature highlights */}
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
+            <Card className="p-4 text-center">
+              <div className="text-green-500 text-4xl mb-3">
+                <i className="pi pi-rocket"></i>
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-900">Next.js 15</h3>
+              <p className="text-600">Latest Next.js with App Router and Server Components</p>
+            </Card>
+            
+            <Card className="p-4 text-center">
+              <div className="text-blue-500 text-4xl mb-3">
+                <i className="pi pi-bolt"></i>
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-900">Server-Side Rendering</h3>
+              <p className="text-600">Pre-rendered content for better SEO and performance</p>
+            </Card>
+            
+            <Card className="p-4 text-center">
+              <div className="text-purple-500 text-4xl mb-3">
+                <i className="pi pi-refresh"></i>
+              </div>
+              <h3 className="text-lg font-semibold mb-2 text-900">Jotai State Management</h3>
+              <p className="text-600">Atomic state management for React applications</p>
+            </Card>
+          </div>
+
+          {/* Demo section */}
+          <Card className="p-6 mb-6">
+            <h2 className="text-2xl font-semibold text-900 mb-3">
+              Live Demo
+            </h2>
+            <p className="text-600 mb-4">
+              This demo fetches global configuration data from the STC API using server-side rendering,
+              then hydrates it into a Jotai store for client-side state management.
+            </p>
+            
+            <div className="flex flex-column sm:flex-row gap-3 justify-content-center">
+              <Link href="/config">
+                <Button 
+                  label="View Configuration Demo" 
+                  icon="pi pi-arrow-right" 
+                  iconPos="right"
+                  size="large"
+                />
+              </Link>
+              <Link href="/instructions">
+                <Button 
+                  label="Setup Instructions" 
+                  icon="pi pi-info-circle" 
+                  iconPos="right"
+                  outlined
+                  size="large"
+                />
+              </Link>
+            </div>
+          </Card>
+
+          {/* Architecture info */}
+          <Card className="p-6 surface-100">
+            <h3 className="text-xl font-semibold text-900 mb-4">Architecture Overview</h3>
+            <div className="flex flex-column gap-3">
+              <div className="flex align-items-start gap-2">
+                <i className="pi pi-check-circle text-green-500 mt-1"></i>
+                <span className="text-700">
+                  <strong>Server Components:</strong> Fetch data on the server for improved SEO and initial load performance
+                </span>
+              </div>
+              <div className="flex align-items-start gap-2">
+                <i className="pi pi-check-circle text-green-500 mt-1"></i>
+                <span className="text-700">
+                  <strong>Client Components:</strong> Handle user interactions and dynamic updates with Jotai
+                </span>
+              </div>
+              <div className="flex align-items-start gap-2">
+                <i className="pi pi-check-circle text-green-500 mt-1"></i>
+                <span className="text-700">
+                  <strong>Hydration:</strong> Server data is seamlessly transferred to client-side state management
+                </span>
+              </div>
+              <div className="flex align-items-start gap-2">
+                <i className="pi pi-check-circle text-green-500 mt-1"></i>
+                <span className="text-700">
+                  <strong>API Integration:</strong> Connects to STC backend API with fallback for development
+                </span>
+              </div>
+            </div>
+          </Card>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
