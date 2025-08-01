@@ -1,14 +1,10 @@
 import AuthStatus from "@/components/auth-status";
 import ConfigDisplay from "@/components/config-display";
-import { fetchConfig } from "@/lib/api";
-import { Card } from "primereact/card";
 import { Chip } from "primereact/chip";
+import { Config } from "@/services";
 
-// This is a Server Component that uses SSR
-export default async function ConfigPage() {
-  // Fetch config data on the server
-  const configResponse = await fetchConfig();
-
+// This Server Component no longer needs to fetch data - it's already in the store!
+export default function ConfigPage() {
   return (
     <div className="min-h-screen surface-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
@@ -17,10 +13,7 @@ export default async function ConfigPage() {
             STC API Configuration
           </h1>
           <p className="text-xl text-600 mb-4">
-            Live data from{" "}
-            <code className="surface-200 p-2 border-round text-sm">
-              localhost:4000/configs
-            </code>
+            Data fetched once in root layout and hydrated to Jotai store
           </p>
           <div className="flex justify-content-center gap-2 flex-wrap">
             <Chip
@@ -29,9 +22,14 @@ export default async function ConfigPage() {
               className="bg-green-100 text-green-800"
             />
             <Chip
-              label="Real API Connection"
-              icon="pi pi-link"
+              label="Store Hydrated"
+              icon="pi pi-database"
               className="bg-blue-100 text-blue-800"
+            />
+            <Chip
+              label="No Extra Requests"
+              icon="pi pi-bolt"
+              className="bg-purple-100 text-purple-800"
             />
           </div>
         </div>
@@ -39,20 +37,8 @@ export default async function ConfigPage() {
         {/* Authentication Status */}
         <AuthStatus />
 
-        {/* Pass server data to client component for interactivity */}
-        <ConfigDisplay initialConfig={configResponse.result} />
-
-        {/* Server-rendered static content */}
-        <Card className="mt-4">
-          <h2 className="text-2xl font-semibold text-900 mb-3">
-            Server-Side Data Preview
-          </h2>
-          <div className="surface-100 border-round p-4">
-            <pre className="text-sm text-700 overflow-auto white-space-pre-wrap m-0">
-              {JSON.stringify(configResponse.result, null, 2)}
-            </pre>
-          </div>
-        </Card>
+        {/* Client component gets data from hydrated store */}
+        <ConfigDisplay initialConfig={{} as Config} />
       </div>
     </div>
   );

@@ -38,20 +38,8 @@ export const useAuth = () => {
         const errorMessage = "Login failed";
 
         if (error && typeof error === "object" && "response" in error) {
-          const axiosError = error as {
-            response?: {
-              status: number;
-              data?: { message?: string; error?: string };
-            };
-          };
-
-          // if (axiosError.response?.status === 401) {
-          //   errorMessage = "Invalid email or password";
-          // } else if (axiosError.response?.data?.message) {
-          //   errorMessage = axiosError.response.result.data.message;
-          // } else if (axiosError.response?.data?.error) {
-          //   errorMessage = axiosError.response.result.data.error;
-          // }
+          // Could handle specific error cases here if needed
+          console.log("Response error details:", error);
         }
 
         setError(errorMessage);

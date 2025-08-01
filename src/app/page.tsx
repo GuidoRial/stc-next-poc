@@ -55,11 +55,20 @@ export default function Home() {
             </p>
             
             <div className="flex flex-column sm:flex-row gap-3 justify-content-center">
+              <Link href="/ssr-demo">
+                <Button 
+                  label="SSR + Jotai Demo" 
+                  icon="pi pi-bolt" 
+                  iconPos="right"
+                  size="large"
+                />
+              </Link>
               <Link href="/config">
                 <Button 
-                  label="View Configuration Demo" 
-                  icon="pi pi-arrow-right" 
+                  label="Configuration Demo" 
+                  icon="pi pi-cog" 
                   iconPos="right"
+                  outlined
                   size="large"
                 />
               </Link>

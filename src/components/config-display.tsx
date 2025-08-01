@@ -8,8 +8,6 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Chip } from "primereact/chip";
 import { Message } from "primereact/message";
-import { Skeleton } from "primereact/skeleton";
-import { useEffect, useState } from "react";
 
 interface ConfigDisplayProps {
   initialConfig: Config;
@@ -18,16 +16,6 @@ interface ConfigDisplayProps {
 export default function ConfigDisplay({ initialConfig }: ConfigDisplayProps) {
   const [, updateConfig] = useAtom(updateConfigAtom);
   const [config] = useAtom(configAtom);
-  const [isClient] = useState(true);
-
-  // Initialize Jotai store with server data immediately
-  useEffect(() => {
-    updateConfig({
-      config: initialConfig,
-      isLoading: false,
-      error: null,
-    });
-  }, [initialConfig, updateConfig]);
 
   // Client-side config refresh using service layer
   const refreshConfig = async () => {
@@ -38,7 +26,7 @@ export default function ConfigDisplay({ initialConfig }: ConfigDisplayProps) {
       const response = await configService.getConfig();
 
       updateConfig({
-        config: response.result.data,
+        config: response.result,
         isLoading: false,
         error: null,
       });
@@ -51,21 +39,8 @@ export default function ConfigDisplay({ initialConfig }: ConfigDisplayProps) {
     }
   };
 
-  // Use current config data or fallback to initial data
+  // Use current config data from store or fallback to initial data
   const currentConfig = config.config || initialConfig;
-
-  if (!isClient) {
-    // Show server-rendered fallback
-    return (
-      <Card className="p-4">
-        <div>
-          <Skeleton width="75%" height="2rem" className="mb-3"></Skeleton>
-          <Skeleton width="50%" height="1.5rem" className="mb-2"></Skeleton>
-          <Skeleton width="66%" height="1.5rem"></Skeleton>
-        </div>
-      </Card>
-    );
-  }
 
   return (
     <Card className="p-4">
