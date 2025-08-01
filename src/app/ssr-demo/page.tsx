@@ -1,48 +1,35 @@
+import JotaiSyncDemo from "@/components/jotai-sync-demo";
+import ParentComponent from "@/components/nested-components/parent-component";
+import { getConfigDataForComponent } from "@/components/server-data-store";
 import SSRDemo from "@/components/ssr-demo";
-import { fetchConfig } from "@/lib/api";
 import { Card } from "primereact/card";
 import { Chip } from "primereact/chip";
-import { setServerSSRData, resetServerSSRData } from "@/components/server-data-store";
-import ParentComponent from "@/components/nested-components/parent-component";
-import JotaiSyncDemo from "@/components/jotai-sync-demo";
 
 /**
  * Server component that fetches data directly and logs it during SSR
  */
 export default async function SSRDemoPage() {
-  // Reset server SSR data store for this request
-  resetServerSSRData();
-  
-  // Fetch data directly in this server component
-  console.log("[SSR-Demo Page] Starting server-side data fetch...");
+  // Use React's cache function to get server data - this will reuse the same data from layout
+  console.log("[SSR-Demo Page] Getting cached server-side data...");
 
-  let serverData = null;
-  const fetchTimestamp = new Date().toISOString();
+  const cachedData = await getConfigDataForComponent("SSR Demo Page");
+  const serverData = cachedData.config;
+  const fetchTimestamp = cachedData.timestamp;
 
-  try {
-    const configResponse = await fetchConfig();
-    serverData = configResponse.result;
+  console.log("[SSR-Demo Page] ✅ Retrieved cached server data:", {
+    timestamp: fetchTimestamp,
+    source: cachedData.source,
+    appName: serverData?.appName,
+    version: serverData?.version,
+    environment: serverData?.environment,
+    dataKeys: Object.keys(serverData || {}),
+    wasFromCache: true, // This data comes from React's cache
+  });
 
-    // Store data in server-side SSR data store using official Jotai SSR pattern
-    setServerSSRData({
-      config: serverData,
-      timestamp: fetchTimestamp,
-      source: 'SSR Demo Page Component'
-    });
+  console.log(
+    "[SSR-Demo Page] 📦 Using cached data - no additional API calls needed!"
+  );
 
-    console.log("[SSR-Demo Page] ✅ Successfully fetched server data:", {
-      timestamp: fetchTimestamp,
-      appName: serverData?.appName,
-      version: serverData?.version,
-      environment: serverData?.environment,
-      dataKeys: Object.keys(serverData || {}),
-      fullData: serverData,
-    });
-    
-    console.log("[SSR-Demo Page] 📦 Stored data using official Jotai SSR pattern for nested components");
-  } catch (error) {
-    console.error("[SSR-Demo Page] ❌ Failed to fetch server data:", error);
-  }
   return (
     <div className="min-h-screen surface-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
@@ -110,8 +97,8 @@ export default async function SSRDemoPage() {
         </Card>
 
         {/* Pass server data as props to child server component */}
-        <SSRDemo 
-          config={serverData} 
+        <SSRDemo
+          config={serverData}
           timestamp={fetchTimestamp}
           source="Page Server Component"
         />
@@ -123,8 +110,9 @@ export default async function SSRDemoPage() {
           </h2>
           <div className="mb-4">
             <p className="text-600 mb-2">
-              The following component hierarchy demonstrates passing data 4 levels deep 
-              without prop drilling using a server-side data store pattern:
+              The following component hierarchy demonstrates passing data 4
+              levels deep without prop drilling using a server-side data store
+              pattern:
             </p>
             <div className="flex align-items-center gap-2 text-sm">
               <Chip label="Page" className="bg-red-100 text-red-800" />
@@ -133,12 +121,18 @@ export default async function SSRDemoPage() {
               <i className="pi pi-arrow-right text-400"></i>
               <Chip label="Child" className="bg-blue-100 text-blue-800" />
               <i className="pi pi-arrow-right text-400"></i>
-              <Chip label="GrandChild" className="bg-orange-100 text-orange-800" />
+              <Chip
+                label="GrandChild"
+                className="bg-orange-100 text-orange-800"
+              />
               <i className="pi pi-arrow-right text-400"></i>
-              <Chip label="GreatGrandChild" className="bg-green-100 text-green-800" />
+              <Chip
+                label="GreatGrandChild"
+                className="bg-green-100 text-green-800"
+              />
             </div>
           </div>
-          
+
           {/* This parent component receives no props but its great-grandchild will access config */}
           <ParentComponent />
         </Card>
@@ -154,29 +148,31 @@ export default async function SSRDemoPage() {
             <div className="flex align-items-start gap-2">
               <i className="pi pi-server text-blue-500 mt-1"></i>
               <span className="text-700">
-                <strong>Server Jotai Store:</strong> Uses createStore() for server-side data management,
-                enables deep component access without prop drilling
+                <strong>Server Jotai Store:</strong> Uses createStore() for
+                server-side data management, enables deep component access
+                without prop drilling
               </span>
             </div>
             <div className="flex align-items-start gap-2">
               <i className="pi pi-desktop text-green-500 mt-1"></i>
               <span className="text-700">
-                <strong>Client Jotai Store:</strong> Automatically hydrated with server data,
-                enables client-side reactivity and updates
+                <strong>Client Jotai Store:</strong> Automatically hydrated with
+                server data, enables client-side reactivity and updates
               </span>
             </div>
             <div className="flex align-items-start gap-2">
               <i className="pi pi-sync text-purple-500 mt-1"></i>
               <span className="text-700">
-                <strong>Synchronized:</strong> Both server and client stores contain the same data,
-                ensuring consistency across SSR and client rendering
+                <strong>Synchronized:</strong> Both server and client stores
+                contain the same data, ensuring consistency across SSR and
+                client rendering
               </span>
             </div>
             <div className="flex align-items-start gap-2">
               <i className="pi pi-sitemap text-orange-500 mt-1"></i>
               <span className="text-700">
-                <strong>Unified Architecture:</strong> Single Jotai-based solution for both 
-                server and client data management
+                <strong>Unified Architecture:</strong> Single Jotai-based
+                solution for both server and client data management
               </span>
             </div>
           </div>
